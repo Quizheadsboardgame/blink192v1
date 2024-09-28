@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLINK-182</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif; /* Standard font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
+            text-align: center;
+        }
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
+        #next-button {
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="George Michael Logo">
+    <h1>BLINK-182</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<script>
+    // Question and answers data
+    const quizData = [
+        { question: "When was Blink-182 formed?", answer: "1992." },
+        { question: "Which city is Blink-182 originally from?", answer: "Poway, California." },
+        { question: "What was the title of Blink-182’s debut album?", answer: "Cheshire Cat (1995)." },
+        { question: "Who were the original members of Blink-182?", answer: "Mark Hoppus, Tom DeLonge, and Scott Raynor." },
+        { question: "What is the title of the band’s second studio album?", answer: "Dude Ranch (1997)." },
+        { question: "Which Blink-182 song features the line 'I guess this is growing up'?", answer: "'Dammit.'" },
+        { question: "What was Blink-182's breakthrough album?", answer: "Enema of the State (1999)." },
+        { question: "Who replaced Scott Raynor as the drummer in 1998?", answer: "Travis Barker." },
+        { question: "Which song includes the lyrics 'All the small things'?", answer: "'All the Small Things.'" },
+        { question: "What year did Blink-182 release Enema of the State?", answer: "1999." },
+        { question: "Which album features the hit single 'What’s My Age Again?'", answer: "Enema of the State." },
+        { question: "Who is the lead vocalist and bassist of Blink-182?", answer: "Mark Hoppus." },
+        { question: "What is the title of Blink-182’s 2001 album?", answer: "Take Off Your Pants and Jacket." },
+        { question: "What song features the line 'I miss you'?", answer: "'I Miss You.'" },
+        { question: "In what year did Blink-182 initially break up?", answer: "2005." },
+        { question: "What was the name of the band’s first greatest hits album?", answer: "Greatest Hits (2005)." },
+        { question: "What is the title of the 2011 album that marked Blink-182's reunion?", answer: "Neighborhoods." },
+        { question: "Which Blink-182 music video features a haunted house?", answer: "'The Rock Show.'" },
+        { question: "Who was the guitarist and co-vocalist for Blink-182?", answer: "Tom DeLonge." },
+        { question: "What was the band’s first album after reuniting in 2009?", answer: "Neighborhoods." },
+        { question: "Which Blink-182 song features the lyric 'I want to see you'?", answer: "'First Date.'" },
+        { question: "What is the name of the documentary about Blink-182 released in 2019?", answer: "Blink-182: The Untitled Documentary." },
+        { question: "Which album includes the hit song 'Feeling This'?", answer: "Blink-182 (2003)." },
+        { question: "What is the title of the song featuring a girl named 'Roxanne'?", answer: "'Roxanne.'" },
+        { question: "Which member of Blink-182 is known for his distinctive hairstyle and tattoos?", answer: "Travis Barker." },
+        { question: "What is the title of Blink-182’s 2003 self-titled album?", answer: "Blink-182." },
+        { question: "Which song contains the line 'I want to be your friend'?", answer: "'The Rock Show.'" },
+        { question: "What is the primary theme of many Blink-182 songs?", answer: "Teenage angst, relationships, and humor." },
+        { question: "Who produced Enema of the State?", answer: "Jerry Finn." },
+        { question: "What was the name of the band’s tour in 2000?", answer: "The Pop Disaster Tour with Green Day." },
+        { question: "Which song features the lyric 'You’re so f*ing special'?", answer: "'Feeling This.'" },
+        { question: "What is the title of the single released in 2016?", answer: "'Bored to Death.'" },
+        { question: "Which album features the song 'Always'?", answer: "Blink-182 (2003)." },
+        { question: "What is the name of the animated character in Blink-182's logo?", answer: "The 'smiley face' character." },
+        { question: "What year did Blink-182 celebrate their 25th anniversary?", answer: "2017." },
+        { question: "What song includes the lyrics 'I’ll be your best friend'?", answer: "'First Date.'" },
+        { question: "What is the title of Blink-182’s 2016 album?", answer: "California." },
+        { question: "What was the first single from California?", answer: "'Bored to Death.'" },
+        { question: "What notable event took place during Blink-182's performance at the 2000 MTV Video Music Awards?", answer: "They performed with a backdrop featuring their logo and high-energy antics." },
+        { question: "Who did Tom DeLonge collaborate with for his side project Angels & Airwaves?", answer: "David Kennedy." },
+        { question: "What song features a line about 'a lonely road'?", answer: "'I Miss You.'" },
+        { question: "Which music video features the band performing at a party?", answer: "'All the Small Things.'" },
+        { question: "What is the title of Blink-182's album released in 2019?", answer: "Nine." },
+        { question: "What year did Blink-182 perform at Coachella for the first time?", answer: "2015." },
+        { question: "What is the theme of the song 'The Adventure'?", answer: "Embracing new experiences and adventures." },
+        { question: "Which band member has been involved in film and TV production?", answer: "Tom DeLonge." },
+        { question: "What song discusses the complexities of relationships?", answer: "'The Girl at the End of the World.'" },
+        { question: "Which Blink-182 album was produced by John Feldmann?", answer: "California." },
+        { question: "What is the title of the song that reflects on growing up and change?", answer: "'Always.'" },
+        { question: "What year did Blink-182 release their Greatest Hits album?", answer: "2005." }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    // Shuffle the questions
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    shuffle(quizData);
+
+    // Load the current question and answer
+    function loadQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        const currentQuestion = quizData[currentQuestionIndex];
+
+        questionContainer.classList.add("fadeOut");
+        answerContainer.classList.add("fadeOut");
+
+        setTimeout(() => {
+            questionContainer.innerText = currentQuestion.question;
+            answerContainer.innerText = currentQuestion.answer;
+
+            questionContainer.classList.remove("fadeOut");
+            questionContainer.classList.add("fadeIn");
+            answerContainer.classList.remove("fadeOut");
+            answerContainer.classList.add("fadeIn");
+        }, 500);
+    }
+
+    // Move to the next question
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            const questionContainer = document.getElementById("question");
+            const answerContainer = document.getElementById("answer");
+            questionContainer.innerText = "Quiz Completed!";
+            answerContainer.innerText = "";
+            document.getElementById("next-button").style.display = "none"; // Hide the next button
+        }
+    }
+
+    // Initial load
+    loadQuestion();
+</script>
+
+</body>
+</html>
